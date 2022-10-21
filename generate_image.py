@@ -18,7 +18,7 @@ print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('
 # * step 1) use text-generator model to create prompt
 def generate_prompt():
     generator = pipeline('text-generation', model="Gustavosta/MagicPrompt-Stable-Diffusion")
-    prompt_seeds=['amazing complex huge green space architecture in', 'elegant grand building set in a green space nature', 'complex green space byzantine church in the', 'elegant ancient architecture in the jungle', 'elegant future architecture in the jungle', 'elegant botanical garden greenhouse architecture in the', 'the heavenly english countryside at', 'huge complex elegant scifi architecture in the forest', 'huge complex elegant scifi architecture in the jungle', ' grand elegant countryside mansion in heavenly']
+    prompt_seeds=['amazing complex huge green space architecture in', 'elegant grand building set in a green space nature', 'complex green space byzantine church in the', 'elegant ancient architecture in the jungle', 'elegant future architecture in the jungle', 'the heavenly english countryside at', 'elegant green space scifi architecture in the forest', 'complex elegant scifi architecture in the jungle', ' elegant green space countryside mansion in heavenly']
     prompt = generator(random.choice(prompt_seeds), max_length=90, num_return_sequences=1)
     prompt = prompt[0]['generated_text']
     print(f"ℹ️ prompt: {prompt}")
