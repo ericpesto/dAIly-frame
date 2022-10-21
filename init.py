@@ -1,19 +1,24 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
 import string
 import random
 from diffusers import StableDiffusionPipeline
-from transformers import pipeline, set_seed
+from transformers import pipeline
 
 import torch
 from PIL import Image
 import numpy as np
 from RealESRGAN import RealESRGAN
 
+import tensorflow as tf
+# print(tf.test.is_gpu_available())
+print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
+
 # * step 1) use text-generator model to create prompt
 def generate_prompt():
     generator = pipeline('text-generation', model="Gustavosta/MagicPrompt-Stable-Diffusion")
-    # set_seed(42)
-    # make jaml object
-    prompt_seeds=['amazing architecture in a', 'beautiful landscape of', 'grand buildings set in a', 'massive byzantine church in a', 'huge complex buildings from a', 'colourful natural scene set in a',  'huge trees in a forest with', 'beautiful view of the sky with','psychedelic wonderland in the forest with', 'future architecture in the sky', 'ancient architecture in a', 'a beautiful lake by' 'beautiful ancient city with', 'huge cathedral in a', 'large mosque in a', 'huge beautiful complex water fountain', 'huge waterfall in the', 'beautiful country side with', 'huge clouds in  heaven']
+    prompt_seeds=['amazing architecture in a', 'beautiful wild landscape in the', 'grand buildings set in a', 'massive byzantine church in a', 'huge complex buildings from a', 'huge tree house in a forest with', 'beautiful view of the sky with planes','psychedelic wonderland lofi village in a', 'future architecture in the sky', 'ancient architecture in the', 'a beautiful lake ripples by' 'grand ancient city with', 'huge cathedral in a', 'huge beautiful complex water fountain', 'huge cliff waterfall in the', 'beautiful country side with', 'the heavenly english countryside at']
     prompt = generator(random.choice(prompt_seeds), max_length=90, num_return_sequences=1)
     prompt = prompt[0]['generated_text']
     print(f"ℹ️ prompt: {prompt}")
@@ -21,10 +26,8 @@ def generate_prompt():
 
 # * step 2) feed prompt into image-to-text model
 def generate_image(prompt):
-    # 'CompVis/stable-diffusion-v1-4'
-    # 'johnslegers/stable-diffusion-v1-5'
     model_id = "CompVis/stable-diffusion-v1-4"
-    num_inference_steps = 200 # default = 50
+    num_inference_steps = 100 # default = 50, sweetspot = 100
     guidance_scale = 7.5 # default = 7.5
     image_height = 768 # 768 # 1024
     image_width = 512 # 512 # 768
@@ -37,7 +40,7 @@ def generate_image(prompt):
     image.save(image_path)
     print(f"image saved ✅")
 
-    # * upscale image
+    # * upscale image, you could chain them, i.e. upscale the upscaled image
     def upscale_image(image_name, image_path):
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         model = RealESRGAN(device, scale=4)
@@ -51,6 +54,7 @@ def generate_image(prompt):
         print(f"x4 image saved ✅")
 
     upscale_image(image_name, image_path)
+
 
 
 image_prompt = generate_prompt()
