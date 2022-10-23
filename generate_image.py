@@ -34,8 +34,9 @@ def generate_image(prompt):
 
     pipe = StableDiffusionPipeline.from_pretrained(model_id, use_auth_token=True)
     pipe.safety_checker = lambda images, **kwargs: (images, False)
+    print('generating image... ⏳')
     image = pipe(prompt, guidance_scale=guidance_scale, height=image_height, width=image_width, num_inference_steps=num_inference_steps).images[0]
-    print('image generated ✅')
+    print('done ✅')
 
     def upscale_image(image):
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -43,12 +44,13 @@ def generate_image(prompt):
         model.load_weights(f"weights/RealESRGAN_x4.pth", download=True)
         print('upscaling image x4... ⏳')
         upscaled_image = model.predict(image)
-        print('✅')
-        image_path = f"./images/{image_name}_x4.png"
-        upscaled_image.save(image_path)
-        print(f"x4 image saved ✅")    
+        print('done ✅')
+        return upscaled_image
 
-    upscale_image(image)
+    image = upscale_image(image)
+    image_path = f"./images/{image_name}_x4.png"
+    image.save(image_path)
+    print(f"image saved ✅") 
 
 for _ in range(5):
     image_prompt = generate_prompt()
