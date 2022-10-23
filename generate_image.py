@@ -26,10 +26,10 @@ def generate_prompt():
 # * step 2) feed prompt into image-to-text model
 def generate_image(prompt):
     model_id = "CompVis/stable-diffusion-v1-4"
-    num_inference_steps = 75 # default = 50, sweetspot=75, max = 100
+    num_inference_steps = 75 # default = 50, sweetspot = 75, max = 100
     guidance_scale = 7.5 # default = 7.5
-    image_height = 64 # 768 # 1024
-    image_width = 64 # 512 # 768
+    image_height = 768 # 1024
+    image_width = 512 # 768
     image_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
 
     pipe = StableDiffusionPipeline.from_pretrained(model_id, use_auth_token=True)
@@ -48,7 +48,7 @@ def generate_image(prompt):
         return upscaled_image
 
     image = upscale_image(image)
-    image_path = f"./images/{image_name}_x4.png"
+    image_path = f"./images/{image_name}.png"
     image.save(image_path)
     print(f"image saved ✅") 
 
