@@ -28,7 +28,7 @@ def generate_prompt():
 # * step 2) feed prompt into image-to-text model
 def generate_image(prompt):
     model_id = "CompVis/stable-diffusion-v1-4"
-    num_inference_steps = 100 # default = 50, sweetspot = 75, max = 100
+    num_inference_steps = 50 # default = 50, sweetspot = 75, max = 100
     guidance_scale = 7.5 # default = 7.5
     image_height = 768 # 1024
     image_width = 512 # 768
