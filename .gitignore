@@ -1,7 +1,4 @@
-# exclude everything
 images/*
-weights/*
-
-# exception to the rule
 !images/.gitkeep
+weights/*
 !weights/.gitkeep
