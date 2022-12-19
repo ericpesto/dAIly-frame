@@ -34,7 +34,7 @@ def generate_image(prompt):
     return image
 
 def upscale_image(image):
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cpu')
     model = RealESRGAN(device, scale=4)
     model.load_weights(f"weights/RealESRGAN_x4.pth", download=True)
     print('upscaling image... ⏳')
